@@ -14,6 +14,8 @@ You need one space before every operator and function and parathesis
 Normal expression: "1+1^(2*3)"
 Calculator type to function: "1 + 1 ^ ( 2 * 3 )"
 
+* If you use the buttons instead of typing in expressions it works well 
+
 * App
 App.java
 This holds the JAVA FX application and attaches the stylesheet
