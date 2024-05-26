@@ -30,82 +30,40 @@ class AppTest {
         assertEquals(2, calculator.processInput("10 / 5"));
     }
 
-//     @Test
-//     void testPower() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.POWER;
-//         assertEquals(8, calculator.applyOp(2, op, 3));
-//     }
+    @Test
+    void testPower() {
+        assertEquals(8, calculator.processInput("2 ^ 3"));
+    }
 
-//     @Test
-//     void testSquareRoot() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.SQUARE_ROOT;
-//         assertEquals(2, calculator.applyOp(4, op, 0));
-//     }
+    @Test
+    void testSquareRoot() {
+        assertEquals(3, calculator.processInput("sqrt ( 9 )"));
+    }
 
-//     @Test
-//     void testLogarithm() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.LOGARITHM;
-//         assertEquals(2, calculator.applyOp(100, op, 10));
-//     }
+    @Test
+    void testLogarithm() {
+        assertEquals(2, calculator.processInput("log ( 100 )"));
+    }
 
-//     @Test
-//     void testSine() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.SINE;
-//         assertEquals(1, calculator.applyOp(90, op, 0));
-//     }
+    @Test
+    void testSine() {
+        assertEquals(1, calculator.processInput("sin ( 90 )"));
+    }
 
-//     @Test
-//     void testCosine() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.COSINE;
-//         assertEquals(0, calculator.applyOp(90, op, 0));
-//     }
+    @Test
+    void testCosine() {
+        assertEquals(0, calculator.processInput("cos ( 90 )"));
+    }
 
-//     @Test
-//     void testTangent() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.TANGENT;
-//         assertEquals(1, calculator.applyOp(45, op, 0));
-//     }
+    @Test
+    void testTangent() {
+        assertEquals(1, calculator.processInput("tan ( 45 )"));
+    }
 
-//     @Test
-//     void testInverseSine() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.INVERSE_SINE;
-//         assertEquals(90, calculator.applyOp(1, op, 0));
-//     }
-
-//     @Test
-//     void testInverseCosine() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.INVERSE_COSINE;
-//         assertEquals(90, calculator.applyOp(0, op, 0));
-//     }
-
-//     @Test
-//     void testInverseTangent() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.INVERSE_TANGENT;
-//         assertEquals(45, calculator.applyOp(1, op, 0));
-//     }
-
-//     @Test
-//     void testFactorial() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.FACTORIAL;
-//         assertEquals(120, calculator.applyOp(5, op, 0));
-//     }
-
-//     @Test
-//     void testModulus() {
-//         Calc calculator = new Calc();
-//         Operator op = Operator.MODULUS;
-//         assertEquals(1, calculator.applyOp(5, op, 2));
-//     }
+    @Test
+    void testModulus() {
+        assertEquals(1, calculator.processInput("5 % 2"));
+    }
 
 //     @Test
 //     void testAbsolute() {
