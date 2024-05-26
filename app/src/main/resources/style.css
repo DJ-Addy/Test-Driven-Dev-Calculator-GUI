@@ -1,0 +1,14 @@
+.background {
+    -fx-background-color: #663333;
+  }
+  .button {
+    -fx-background-color: silver;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+  }
+  .display {
+    -fx-background-color: #cccccc;
+    -fx-text-fill: black; /* Sets the text color to black */
+    -fx-font-size: 30px; /* Sets the font size */
+    -fx-font-family: "Arial"; /* Sets the font family */
+  }

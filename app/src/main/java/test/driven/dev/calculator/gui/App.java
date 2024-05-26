@@ -43,8 +43,9 @@ public class App extends Application {
         public void start(Stage primaryStage) throws Exception {
             // Create the text field
             display = new TextField();
-            display.getStyleClass().contains("input");
+            display.getStyleClass().add("display");
             display.setEditable(true);
+            display.setPrefSize(500, 500);
 
             // Create the buttons
             Button button1 = new Button("1");
@@ -71,7 +72,6 @@ public class App extends Application {
             Button parathesis1 = new Button("(");
             Button parathesis2 = new Button(")");
             Button buttonEquals = new Button("=");
-
 
             button1.setOnAction(e -> {
                 display.setText(display.getText() + "1");
@@ -145,6 +145,55 @@ public class App extends Application {
             buttonEquals.setOnAction(e -> {
                 display.setText(calc.processInput(display.getText()) + "");
             });
+            button1.setPrefSize(150, 150);
+            button2.setPrefSize(150, 150);
+            button3.setPrefSize(150, 150);
+            button4.setPrefSize(150, 150);
+            button5.setPrefSize(150, 150);
+            button6.setPrefSize(150, 150);
+            button7.setPrefSize(150, 150);
+            button8.setPrefSize(150, 150);
+            button9.setPrefSize(150, 150);
+            button0.setPrefSize(150, 150);
+            buttonPlus.setPrefSize(150, 150);
+            buttonMinus.setPrefSize(150, 150);
+            buttonDivide.setPrefSize(150, 150);
+            buttonMultiply.setPrefSize(150, 150);
+            buttonSin.setPrefSize(150, 150);
+            buttonCos.setPrefSize(150, 150);
+            buttonTan.setPrefSize(150, 150);
+            buttonLog.setPrefSize(150, 150);
+            buttonSqrt.setPrefSize(150, 150);
+            buttonMod.setPrefSize(150, 150);
+            buttonPower.setPrefSize(150, 150);
+            parathesis1.setPrefSize(150, 150);
+            parathesis2.setPrefSize(150, 150);
+            buttonEquals.setPrefSize(150, 150);
+            
+            button1.setPrefSize(100, 100);
+            button2.setPrefSize(100, 100);
+            button3.setPrefSize(100, 100);
+            button4.setPrefSize(100, 100);
+            button5.setPrefSize(100, 100);
+            button6.setPrefSize(100, 100);
+            button7.setPrefSize(100, 100);
+            button8.setPrefSize(100, 100);
+            button9.setPrefSize(100, 100);
+            button0.setPrefSize(100, 100);
+            buttonPlus.setPrefSize(100, 100);
+            buttonMinus.setPrefSize(100, 100);
+            buttonDivide.setPrefSize(100, 100);
+            buttonMultiply.setPrefSize(100, 100);
+            buttonSin.setPrefSize(100, 100);
+            buttonCos.setPrefSize(100, 100);
+            buttonTan.setPrefSize(100, 100);
+            buttonLog.setPrefSize(100, 100);
+            buttonSqrt.setPrefSize(100, 100);
+            buttonMod.setPrefSize(100, 100);
+            buttonPower.setPrefSize(100, 100);
+            parathesis1.setPrefSize(100, 100);
+            parathesis2.setPrefSize(100, 100);
+            buttonEquals.setPrefSize(100, 100);
 
             // Add buttons to the grid pane
             gridPane.add(button1, 0, 0);
@@ -172,21 +221,48 @@ public class App extends Application {
             gridPane.add(buttonSqrt, 2, 5);
             gridPane.add(buttonEquals, 3, 5);
 
+            //set all buttons to the same style using the style.css file
+            button1.getStyleClass().add("button");
+            button2.getStyleClass().add("button");
+            button3.getStyleClass().add("button");
+            button4.getStyleClass().add("button");
+            button5.getStyleClass().add("button");
+            button6.getStyleClass().add("button");
+            button7.getStyleClass().add("button");
+            button8.getStyleClass().add("button");
+            button9.getStyleClass().add("button");
+            button0.getStyleClass().add("button");
+            buttonPlus.getStyleClass().add("button");
+            buttonMinus.getStyleClass().add("button");
+            buttonDivide.getStyleClass().add("button");
+            buttonMultiply.getStyleClass().add("button");
+            buttonSin.getStyleClass().add("button");
+            buttonCos.getStyleClass().add("button");
+            buttonTan.getStyleClass().add("button");
+            buttonLog.getStyleClass().add("button");
+            buttonSqrt.getStyleClass().add("button");
+            buttonMod.getStyleClass().add("button");
+            buttonPower.getStyleClass().add("button");
+            parathesis1.getStyleClass().add("button");
+            parathesis2.getStyleClass().add("button");
+            buttonEquals.getStyleClass().add("button");
+
 
             // Create the main layout
             VBox vbox = new VBox();
+
 
             vbox.getChildren().addAll(display, gridPane);
             gridPane.getStyleClass().add("div");
             gridPane.getStyleClass().add("calcDisplay");
 
             // Create the scene
-            Scene scene = new Scene(vbox, 300, 200);
+            Scene scene = new Scene(vbox, 400, 800);
 
             // Set the scene and show the stage
-            // URL styleURL = getClass().getResource("//style.css");
-		    // String stylesheet = styleURL.toExternalForm();
-		    // scene.getStylesheets().add(stylesheet);
+            URL styleURL = getClass().getResource("/style.css");
+		    String stylesheet = styleURL.toExternalForm();
+		    scene.getStylesheets().add(stylesheet);
             primaryStage.setTitle("TI 84-AD edition");
             primaryStage.setScene(scene);
             primaryStage.show();
