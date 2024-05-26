@@ -1,103 +1,192 @@
 package test.driven.dev.calculator.gui;
 import java.util.Stack;
+
 public class Calc {
     
     private Stack<Double> computeStack;
-    private Stack<Operator> operatorStack;
+    private Stack<Character> operatorStack;
+    private boolean error;
     
     public Calc() {
         computeStack = new Stack<Double>();
-        operatorStack = new Stack<Operator>();
+        operatorStack = new Stack<Character>();
+        error = false;
     }
 
-   public double compute(String sequence) {
-    for (int i = 0; i < sequence.length(); i++) {
-        int number = parseNumber(sequence, i);
-         System.out.println("parseNumber: " + number);
-        computeStack.push((double)number);
-        // Increment i by the number of characters processed in parseNumber
-        i += Integer.toString(number).length();
+    private boolean isOperator(char ch) {
+        return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '^' || ch == '%';
+    }
 
-        if (i >= sequence.length()) {
-            break;
+    private boolean isFunction(String str) {
+        return str.equals("sin") || str.equals("cos") || str.equals("tan") || str.equals("log") || str.equals("sqrt");
+    }
+
+    private int getPrecedence(char ch) {
+        if (ch == '+' || ch == '-' || ch == '%' || ch == '^') {
+            return 1;
         }
-
-        Operator op = parseOperator(sequence, i);
-        collapseTop(op);
-        operatorStack.push(op);
-    }
-    collapseTop(Operator.BLANK);
-    if (computeStack.size() == 1 && operatorStack.isEmpty()) {
-        return computeStack.pop();
-    }
-    return 0;
-}
-
-    private void collapseTop(Operator futureTop) {
-        while (computeStack.size() >= 2 && !operatorStack.isEmpty()) {
-            if (priorityOfOperator(futureTop) <= priorityOfOperator(operatorStack.peek())) {
-                double second = computeStack.pop();
-                System.out.println(second);
-                double first = computeStack.pop();
-                 System.out.println(first);
-                Operator op = operatorStack.pop();
-                double result = applyOp(first, op, second);
-                computeStack.push(result);
-            } else {
-                break;
-            }
+        if (ch == '*' || ch == '/') {
+            return 2;
         }
-    }
-
-    private double applyOp(double left, Operator op, double right) {
-        switch (op) {
-            case ADD: return left + right;
-            case SUBTRACT: return left - right;
-            case MULTIPLY: return left * right;
-            case DIVIDE: return left / right;
-            default: return right;
-        }
-    }
-
-    private int priorityOfOperator(Operator op) {
-        switch (op) {
-            case ADD: return 1;
-            case SUBTRACT: return 1;
-            case MULTIPLY: return 2;
-            case DIVIDE: return 2;
-            case BLANK: return 0;
+        if (ch == '!') {
+            return 3; // Highest precedence for factorial since it's unary
         }
         return 0;
     }
 
-   private int parseNumber(String sequence, int offset) {
-    StringBuilder sb = new StringBuilder();
-    while (offset < sequence.length() && (Character.isDigit(sequence.charAt(offset)))) {
-        sb.append(sequence.charAt(offset));
-        offset++;
+    private void functionHandler(String function, double argument) {
+        double result = 0;
+        switch (function) {
+            case "sin":
+                result = Math.sin(Math.toRadians(argument));
+                break;
+            case "cos":
+                result = Math.cos(Math.toRadians(argument));
+                break;
+            case "tan":
+                result = Math.tan(Math.toRadians(argument));
+                break;
+            case "log":
+                result = Math.log10(argument);
+                break;
+            case "sqrt":
+                result = Math.sqrt(argument);
+                break;
+        }
+        computeStack.push(result);
     }
-    return Integer.parseInt(sb.toString());
-}
 
-    private Operator parseOperator(String sequence, int offset) {
-        if (offset < sequence.length()) {
-            char op = sequence.charAt(offset);
-            switch (op) {
-                case '+': return Operator.ADD;
-                case '-': return Operator.SUBTRACT;
-                case '*': return Operator.MULTIPLY;
-                case '/': return Operator.DIVIDE;
+    private void processOperator(char t) {
+        double a, b;
+        if (computeStack.empty()) {
+            System.out.println("Expression error.");
+            error = true;
+            return;
+        } else {
+            b = computeStack.pop();
+        }
+        if (computeStack.empty()) {
+            System.out.println("Expression error.");
+            error = true;
+            return;
+        } else {
+            a = computeStack.pop();
+        }
+        double r = 0;
+        switch (t) {
+            case '+':
+                r = a + b;
+                break;
+            case '-':
+                r = a - b;
+                break;
+            case '*':
+                r = a * b;
+                break;
+            case '/':
+                r = a / b;
+                break;
+            case '^':
+                r = Math.pow(a, b);
+                break;
+            case '%':
+                r = a % b;
+                break;
+            case '!':
+                r= 1;
+                for (int i = 1; i <= a; i++) {
+                    r *= i;
+                }
+                break;
+            default:
+                System.out.println("Operator error.");
+                error = true;
+        }
+        computeStack.push(r);
+    }
+
+    public double processInput(String input) {
+        // The tokens that make up the input
+        String[] tokens = input.split(" ");
+
+        // Main loop - process all input tokens
+        for (int n = 0; n < tokens.length; n++) {
+            String nextToken = tokens[n];
+            char ch = nextToken.charAt(0);
+            if (ch >= '0' && ch <= '9') {
+                double value = Double.parseDouble(nextToken);
+                computeStack.push(value);
+            } else if (isOperator(ch)) {
+                if (operatorStack.empty() || getPrecedence(ch) > getPrecedence(operatorStack.peek())) {
+                    operatorStack.push(ch);
+                } else {
+                    while (!operatorStack.empty() && getPrecedence(ch) <= getPrecedence(operatorStack.peek())) {
+                        char toProcess = operatorStack.pop();
+                        processOperator(toProcess);
+                    }
+                    operatorStack.push(ch);
+                }
+            } else if (isFunction(nextToken)) {
+                // Read the function argument
+                if (tokens.length > n + 2 && tokens[n + 1].equals("(") && tokens[n + 3].equals(")")) {
+                    double argument = Double.parseDouble(tokens[n + 2]);
+                    functionHandler(nextToken, argument);
+                    n += 3 ; // Skip the next three tokens
+                } else {
+                    System.out.println("Error: Invalid function format.");
+                    error = true;
+                }
+            } else if (ch == '(') {
+                operatorStack.push(ch);
+            } else if (ch == ')') {
+                while (!operatorStack.empty() && operatorStack.peek() != '(') {
+                    char toProcess = operatorStack.pop();
+                    processOperator(toProcess);
+                }
+                if (!operatorStack.empty() && operatorStack.peek() == '(') {
+                    operatorStack.pop();
+                } else {
+                    System.out.println("Error: unbalanced parenthesis.");
+                    error = true;
+                }
             }
         }
-        return Operator.BLANK;
+        // Empty out the operator stack at the end of the input
+        while (!operatorStack.empty() && isOperator(operatorStack.peek())) {
+            char toProcess = operatorStack.pop();
+            processOperator(toProcess);
+        }
+        // Return the result if no error has been seen.
+        if (!error) {
+            double result = computeStack.pop();
+            if (!operatorStack.empty() || !computeStack.empty()) {
+                System.out.println("Expression error.");
+                return Double.NaN; // Indicate an error occurred
+            } else {
+                return result;
+            }
+        } else {
+            return Double.NaN; // Indicate an error occurred
+        }
     }
-    
 
     public static void main(String[] args) {
-        String exper = "3+5*2";
         Calc calculator = new Calc();
-        double res = calculator.compute(exper);
-        System.out.println("Result: " + res);
-    }
+        String expression = "3 + 5 * 2";
+        System.out.println("Result: " + calculator.processInput(expression)); // Should output 13
 
+        expression = "3 + ( 2 * 2 )";
+        System.out.println("Result: " + calculator.processInput(expression)); // Should output 7
+
+        expression = "sin ( 90 ) + 2";
+        System.out.println("Result: " + calculator.processInput(expression)); // Should output 1.0
+
+        expression = "5 % 2";
+        System.out.println("Result: " + calculator.processInput(expression)); // Should output 1.0
+        
+        expression = "log ( 100 ) / 10";
+        System.out.println("Result: " + calculator.processInput(expression)); // Should output 0.2
+        expression = "( sqrt ( 4 ) / 10 ) + 2";
+        System.out.println("Result: " + calculator.processInput(expression)); // Should output 1.0
+    }
 }
