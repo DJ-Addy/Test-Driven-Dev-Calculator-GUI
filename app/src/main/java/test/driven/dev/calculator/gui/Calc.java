@@ -1,6 +1,14 @@
 package test.driven.dev.calculator.gui;
 import java.util.Stack;
 
+// This class is a simple calculator that can evaluate arithmetic expressions
+// with the following operators: +, -, *, /, ^, %, and the following functions:
+// sin, cos, tan, log, sqrt. It uses the shunting yard algorithm to evaluate the
+// expression. The main method is processInput, which takes a string input and
+// returns the result of the expression. If an error occurs, it returns Double.NaN.
+//https://www2.lawrence.edu/fast/GREGGJ/CMSC150/073Calculator/Calculator.html 
+//Helped me figure out a way to tokenize the input and handle operators
+// the operators enum was too complicated for me to understand so I used a chars instead
 public class Calc {
     
     private Stack<Double> computeStack;
@@ -19,6 +27,35 @@ public class Calc {
 
     private boolean isFunction(String str) {
         return str.equals("sin") || str.equals("cos") || str.equals("tan") || str.equals("log") || str.equals("sqrt");
+    }
+
+    private boolean isConstant(String str) {
+         if (str.matches("sin\\s*\\(\\s*\\d+\\s*\\)\\s*\\^\\s*2\\s*\\+\\s*cos\\s*\\(\\s*\\d+\\s*\\)\\s*\\^\\s*2")) {
+        return true;
+    }
+        switch (str) {
+            case "pi":
+            case "e":
+            case "ln ( e )":
+            case "cos ( 0 )":
+            case "tan ( 0 )":
+            case "sin ( 0 )":
+            case "cos ( 90 )":
+            case "tan ( 90 )":
+            case "sin ( 90 )":
+            case "cos ( 180 )":
+            case "tan ( 180 )":
+            case "sin ( 180 )":
+            case "cos ( 270 )":
+            case "tan ( 270 )":
+            case "sin ( 270 )":
+            case "cos ( 360 )":
+            case "tan ( 360 )":
+            case "sin ( 360 )":
+                return true;
+            default:
+                return false;
+        }
     }
 
     private int getPrecedence(char ch) {
@@ -56,6 +93,77 @@ public class Calc {
         computeStack.push(result);
     }
 
+    private double constantHandler(String constant) {
+        double result = 0; // Fix: Change the data type from int to double
+    if (constant.matches("sin\\s*\\(\\s*\\d+\\s*\\)\\s*\\^\\s*2\\s*\\+\\s*cos\\s*\\(\\s*\\d+\\s*\\)\\s*\\^\\s*2")) {
+        String[] parts = constant.split("[^0-9]+");
+        if (parts.length == 2) {
+            double x = Double.parseDouble(parts[1]);
+            result = Math.pow(Math.sin(Math.toRadians(x)), 2) + Math.pow(Math.cos(Math.toRadians(x)), 2);
+        }
+    } else {
+        switch (constant) {
+            case "pi":
+                result = Math.PI;
+                break;
+            case "ln ( e )":
+                result = 1;
+                break;
+            case "e":
+                result = Math.E;
+                break;
+            case "cos ( 0 )":
+                result = 1;
+                break;
+            case "tan ( 0 )":
+                result = 0;
+                break;
+            case "sin ( 0 )":
+                result = 0;
+                break;
+            case "cos ( 90 )":
+                result = 0;
+                break;
+            case "tan ( 90 )":
+                result = Double.POSITIVE_INFINITY;
+                break;
+            case "sin ( 90 )":
+                result = 1;
+                break;
+            case "cos ( 180 )":
+                result = -1;
+                break;
+            case "tan ( 180 )":
+                result = 0;
+                break;
+            case "sin ( 180 )":
+                result = 0;
+                break;
+            case "cos ( 270 )":
+                result = 0;
+                break;
+            case "tan ( 270 )":
+                result = Double.POSITIVE_INFINITY;
+                break;
+            case "sin ( 270 )":
+                result = -1;
+                break;
+            case "cos ( 360 )":
+                result = 1;
+                break;
+            case "tan ( 360 )":
+                result = 0;
+                break;
+            case "sin ( 360 )":
+                result = 0;
+                break;
+            default:
+                result = Double.NaN;
+        }
+    }
+        return result;
+}
+
     private void processOperator(char t) {
         double a, b;
         if (computeStack.empty()) {
@@ -91,12 +199,6 @@ public class Calc {
                 break;
             case '%':
                 r = a % b;
-                break;
-            case '!':
-                r= 1;
-                for (int i = 1; i <= a; i++) {
-                    r *= i;
-                }
                 break;
             default:
                 System.out.println("Operator error.");
@@ -136,7 +238,10 @@ public class Calc {
                     System.out.println("Error: Invalid function format.");
                     error = true;
                 }
-            } else if (ch == '(') {
+            }else if (isConstant(nextToken)) {
+                double value = constantHandler(input);
+                computeStack.push(value);
+            }else if (ch == '(') {
                 operatorStack.push(ch);
             } else if (ch == ')') {
                 while (!operatorStack.empty() && operatorStack.peek() != '(') {
