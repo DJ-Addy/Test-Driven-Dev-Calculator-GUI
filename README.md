@@ -9,6 +9,19 @@ Running Instructions:
 ./gradlew.bat run
 
 ```
+```bash
+Necessary Packages:
+JavaFX for gui
+
+gradle 8.5 or above++
+
+Java v20+
+
+
+
+```
+
+
 * NOTE:
 You need one space before every operator and function and parathesis
 Normal expression: "1+1^(2*3)"
